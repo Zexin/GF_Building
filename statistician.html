@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html ng-app="app" xmlns:ng="http://angularjs.org" id="ng-app"  >
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.css">
+
+    <script src="js/jquery-3.1.0.min.js"></script>
+    <script src="js/angular.min.js"></script>
+
+    <script>
+//        checkUser();
+
+    </script>
+    <style>
+        *{
+            font-family: 'Microsoft YaHei UI','Microsoft YaHei','SimSun','Segoe UI','Lucida Grande',Verdana,Arial,Helvetica,sans-serif !important;
+        }
+        .navbar-nav > li > a {
+            line-height: 40px;
+            -webkit-transition: .3s ease-in-out;
+            transition: .3s ease-in-out;
+        }
+        body { padding-top: 70px; }
+
+        .navbar{
+            min-height:70px;
+        }
+
+        .navbar-brand img{
+            height:40px;
+            display: inline;
+        }
+        .navbar-brand div{
+            display: inline;
+            color: white;
+        }
+        .bg-inverse {
+            background-color: #252628;
+        }
+        .bg-gun{
+            margin-left:10px;
+            margin-top:10px;
+        }
+        .intro{
+            font-size:16px;
+        }
+    </style>
+</head>
+<body ng-controller="list">
+
+<nav class="navbar navbar-black bg-inverse  navbar-fixed-top">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">
+                <img alt="Brand" src="img/iop.jpg">
+                <div>
+                    IOP制造公司出货统计
+                </div>
+
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <!--<li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>-->
+                <!--<li><a href="#">Link</a></li>-->
+                <!--<li class="dropdown">-->
+                    <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>-->
+                    <!--<ul class="dropdown-menu">-->
+                        <!--<li><a href="#">Action</a></li>-->
+                        <!--<li><a href="#">Another action</a></li>-->
+                        <!--<li><a href="#">Something else here</a></li>-->
+                        <!--<li role="separator" class="divider"></li>-->
+                        <!--<li><a href="#">Separated link</a></li>-->
+                        <!--<li role="separator" class="divider"></li>-->
+                        <!--<li><a href="#">One more separated link</a></li>-->
+                    <!--</ul>-->
+                <!--</li>-->
+            </ul>
+            <!--<form class="navbar-form navbar-left">-->
+                <!--<div class="form-group">-->
+                    <!--<input type="text" class="form-control" placeholder="Search">-->
+                <!--</div>-->
+                <!--<button type="submit" class="btn btn-default">Submit</button>-->
+            <!--</form>-->
+            <!--<ul class="nav navbar-nav navbar-right">-->
+                <!--<li><a href="#">Link</a></li>-->
+                <!--<li class="dropdown">-->
+                    <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>-->
+                    <!--<ul class="dropdown-menu">-->
+                        <!--<li><a href="#">Action</a></li>-->
+                        <!--<li><a href="#">Another action</a></li>-->
+                        <!--<li><a href="#">Something else here</a></li>-->
+                        <!--<li role="separator" class="divider"></li>-->
+                        <!--<li><a href="#">Separated link</a></li>-->
+                    <!--</ul>-->
+                <!--</li>-->
+            <!--</ul>-->
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+
+
+<div class="content">
+    <div class="container">
+
+        <h4 class="intro">
+            数据来自<a href="#">GFHelper</a>.
+        </h4>
+
+        <br>
+        <br>
+
+
+        <div>
+            <h4>
+                HG(手枪)
+            </h4>
+            <br>
+            <button class="btn bg-primary bg-gun" ng-repeat="gun in gun_info | filter:{type:1}">
+                {{gun.name}}
+                <span class="gun_code">| {{gun.code}}</span>
+            </button>
+        </div>
+
+        <br>
+        <div>
+            <h4>
+                SMG(冲锋枪)
+            </h4>
+            <br>
+            <button class="btn bg-primary bg-gun" ng-repeat="gun in gun_info | filter:{type:2}">
+                {{gun.name}}
+                <span class="gun_code">| {{gun.code}}</span>
+            </button>
+        </div>
+
+        <br>
+        <div>
+            <h4>
+                RF(步枪)
+            </h4>
+            <br>
+            <button class="btn bg-primary bg-gun" ng-repeat="gun in gun_info | filter:{type:3}">
+                {{gun.name}}
+                <span class="gun_code">| {{gun.code}}</span>
+            </button>
+
+        </div>
+
+        <br>
+        <div>
+            <h4>
+                AR(突击步枪)
+            </h4>
+            <br>
+            <button class="btn bg-primary bg-gun" ng-repeat="gun in gun_info | filter:{type:4}">
+                {{gun.name}}
+                <span class="gun_code">| {{gun.code}}</span>
+            </button>
+        </div>
+
+        <br>
+        <div>
+            <h4>
+                MG(机枪)
+            </h4>
+            <br>
+            <button class="btn bg-primary bg-gun" ng-repeat="gun in gun_info | filter:{type:5}">
+                {{gun.name}}
+                <span class="gun_code">| {{gun.code}}</span>
+            </button>
+
+        </div>
+
+
+    </div>
+</div>
+
+
+<div class="footer container">
+    <hr style="margin-bottom: 10px">
+    <div style="font-size:12px;color:#999;float:right">
+    </div>
+</div>
+</body>
+
+<script>
+
+    var sp = 'http://localhost/'
+
+    angular.module('app', [
+    ]).controller('list',['$scope','$http','$location',function($scope,$http,$location){
+
+        $scope.gun_info = [];
+
+        var get_gun_info = $http({
+            method:'GET',
+            url:sp +　'gun_info.json'
+        });
+
+        get_gun_info.then(function(resp){
+
+            console.log(resp.data)
+            $scope.gun_info = resp.data.gun_info;
+
+        })
+
+    }
+    ]).config(function($sceProvider) {
+        // Completely disable SCE to support IE7.
+        $sceProvider.enabled(false);
+    });
+
+</script>
+</html>
