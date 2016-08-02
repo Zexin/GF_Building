@@ -111,7 +111,7 @@
 </nav>
 
 
-<div class="content">
+<div class="content" ng-show="list">
     <div class="container">
 
         <h4 class="intro">
@@ -127,7 +127,7 @@
                 HG(手枪)
             </h4>
             <br>
-            <button class="btn bg-primary bg-gun" ng-repeat="gun in gun_info | filter:{type:1}">
+            <button class="btn bg-primary bg-gun" ng-click="showSatistic(gun)" ng-repeat="gun in gun_info | filter:{type:1}">
                 {{gun.name}}
                 <span class="gun_code">| {{gun.code}}</span>
             </button>
@@ -139,7 +139,7 @@
                 SMG(冲锋枪)
             </h4>
             <br>
-            <button class="btn bg-primary bg-gun" ng-repeat="gun in gun_info | filter:{type:2}">
+            <button class="btn bg-primary bg-gun" ng-click="showSatistic(gun)" ng-repeat="gun in gun_info | filter:{type:2}">
                 {{gun.name}}
                 <span class="gun_code">| {{gun.code}}</span>
             </button>
@@ -151,7 +151,7 @@
                 RF(步枪)
             </h4>
             <br>
-            <button class="btn bg-primary bg-gun" ng-repeat="gun in gun_info | filter:{type:3}">
+            <button class="btn bg-primary bg-gun" ng-click="showSatistic(gun)" ng-repeat="gun in gun_info | filter:{type:3}">
                 {{gun.name}}
                 <span class="gun_code">| {{gun.code}}</span>
             </button>
@@ -164,7 +164,7 @@
                 AR(突击步枪)
             </h4>
             <br>
-            <button class="btn bg-primary bg-gun" ng-repeat="gun in gun_info | filter:{type:4}">
+            <button class="btn bg-primary bg-gun" ng-click="showSatistic(gun)" ng-repeat="gun in gun_info | filter:{type:4}">
                 {{gun.name}}
                 <span class="gun_code">| {{gun.code}}</span>
             </button>
@@ -176,7 +176,7 @@
                 MG(机枪)
             </h4>
             <br>
-            <button class="btn bg-primary bg-gun" ng-repeat="gun in gun_info | filter:{type:5}">
+            <button class="btn bg-primary bg-gun" ng-click="showSatistic(gun)" ng-repeat="gun in gun_info | filter:{type:5}">
                 {{gun.name}}
                 <span class="gun_code">| {{gun.code}}</span>
             </button>
@@ -186,7 +186,95 @@
 
     </div>
 </div>
+<div class="content" ng-show="!list">
+    <div class="container">
 
+        <h4 class="intro">
+            数据来自<a href="#">GFHelper</a>.
+        </h4>
+
+        <br>
+
+        <H4>
+            {{currentGun.name}}的出货统计数据：
+        </H4>
+
+
+
+
+        <table>
+            <thead>
+            <tr>
+                <td>
+                    序号
+                </td>
+                <td>
+                    人力
+                </td>
+                <td>
+                    弹药
+                </td>
+                <td>
+                    口粮
+                </td>
+                <td>
+                    零件
+                </td>
+                <td>
+                    出货数
+                </td>
+
+                <td>
+                    总数
+                </td>
+                <td>
+                    出货率
+                </td>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            <tr ng-repeat="record in build_info.res">
+
+                <td>
+                    {{$index +1}}
+                </td>
+
+                <td>
+                    {{record.mp}}
+                </td>
+                <td>
+                    {{record.ammo}}
+                </td>
+                <td>
+                    {{record.mre}}
+                </td>
+                <td>
+                    {{record.part}}
+                </td>
+
+                <td>
+                    {{record.count}}
+                </td>
+                <td>
+                    {{record.total}}
+                </td>
+                <td>
+                    {{(100 *(record.count/record.total)).toFixed(3)+'%'}}
+                </td>
+
+            </tr>
+            </tbody>
+
+
+        </table>
+
+
+
+
+    </div>
+</div>
 
 <div class="footer container">
     <hr style="margin-bottom: 10px">
@@ -197,24 +285,48 @@
 
 <script>
 
-    var sp = 'http://localhost/'
+    var sp_gun_info = 'http://gfdb.baka.pw/res/'
+     sp_gun_info = 'json/'   //local json
+
+    var sp_build_info = 'http://gfdb.baka.pw/result.php'
 
     angular.module('app', [
     ]).controller('list',['$scope','$http','$location',function($scope,$http,$location){
 
         $scope.gun_info = [];
-
+        $scope.list = true;
+        $scope.currentGun = {}
         var get_gun_info = $http({
             method:'GET',
-            url:sp +　'gun_info.json'
+            url:sp_gun_info +　'gun_info.json'
         });
 
         get_gun_info.then(function(resp){
-
-            console.log(resp.data)
+//            console.log(resp.data)
             $scope.gun_info = resp.data.gun_info;
 
         })
+
+        $scope.showSatistic = function(gun){
+//            console.log(gun)
+            $scope.list = false;
+            $scope.currentGun = gun;
+
+            var build_info = $http({
+                method:'GET',
+                url:sp_build_info +　'?id=' + gun.id
+            });
+
+            build_info.then(function(resp){
+                console.log(resp.data)
+                $scope.build_info = resp.data;
+            })
+
+
+//            $scope.build_info = {"total":"23","res":[{"mp":"130","ammo":"130","mre":"130","part":"130","count":"17"},{"mp":"130","ammo":"130","mre":"130","part":"30","count":"2"},{"mp":"150","ammo":"230","mre":"150","part":"130","count":"2"},{"mp":"130","ammo":"130","mre":"130","part":"330","count":"1"},{"mp":"145","ammo":"145","mre":"145","part":"145","count":"1"}]};
+
+
+        }
 
     }
     ]).config(function($sceProvider) {
