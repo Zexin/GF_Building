@@ -2,17 +2,13 @@
 <html ng-app="app" xmlns:ng="http://angularjs.org" id="ng-app"  >
 <head lang="en">
     <meta charset="UTF-8">
-    <title></title>
+    <title>IOP制造公司出货统计</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <!--<link rel="stylesheet" href="css/bootstrap-theme.css">-->
-
     <script src="js/jquery-3.1.0.min.js"></script>
     <script src="js/angular.min.js"></script>
 
-    <script>
-//        checkUser();
 
-    </script>
     <style>
         *{
             font-family: 'Microsoft YaHei UI','Microsoft YaHei','SimSun','Segoe UI','Lucida Grande',Verdana,Arial,Helvetica,sans-serif !important;
@@ -120,8 +116,9 @@
     <div class="container">
 
         <h4 class="intro">
-            数据来自<a href="#">GFHelper</a>.
+            数据来自<a href="#">GFDB</a>.
         </h4>
+
 
         <br>
         <br>
@@ -187,77 +184,77 @@
         </div>
 
 
-        <div class="latest_build" ng-show="showlatest" >
-            <h4>
-                最近出货
-            </h4>
-            <table class="table">
-                <thead>
-                <tr>
-                    <td>
-                        序号
-                    </td>
-                    <td>
-                        人形
-                    </td>
+        <!--<div class="latest_build" ng-show="showlatest" >-->
+            <!--<h4>-->
+                <!--最近出货-->
+            <!--</h4>-->
+            <!--<table class="table">-->
+                <!--<thead>-->
+                <!--<tr>-->
+                    <!--<td>-->
+                        <!--序号-->
+                    <!--</td>-->
+                    <!--<td>-->
+                        <!--人形-->
+                    <!--</td>-->
 
-                    <td>
-                        人力
-                    </td>
-                    <td>
-                        弹药
-                    </td>
-                    <td>
-                        口粮
-                    </td>
-                    <td>
-                        零件
-                    </td>
+                    <!--<td>-->
+                        <!--人力-->
+                    <!--</td>-->
+                    <!--<td>-->
+                        <!--弹药-->
+                    <!--</td>-->
+                    <!--<td>-->
+                        <!--口粮-->
+                    <!--</td>-->
+                    <!--<td>-->
+                        <!--零件-->
+                    <!--</td>-->
 
-                </tr>
-                </thead>
+                <!--</tr>-->
+                <!--</thead>-->
 
-                <tbody>
+                <!--<tbody>-->
 
-                <tr ng-repeat="record in latestBuild">
+                <!--<tr ng-repeat="record in latestBuild">-->
 
-                    <td>
-                        {{$index +1}}
-                    </td>
-                    <td>
+                    <!--<td>-->
+                        <!--{{$index +1}}-->
+                    <!--</td>-->
+                    <!--<td>-->
 
-                        {{doll_list['id_'+record.gunid].name}}
-                    </td>
+                        <!--{{doll_list['id_'+record.gunid].name}}-->
+                    <!--</td>-->
 
 
 
-                    <td>
-                        {{record.mp}}
-                    </td>
-                    <td>
-                        {{record.ammo}}
-                    </td>
-                    <td>
-                        {{record.mre}}
-                    </td>
-                    <td>
-                        {{record.part}}
-                    </td>
+                    <!--<td>-->
+                        <!--{{record.mp}}-->
+                    <!--</td>-->
+                    <!--<td>-->
+                        <!--{{record.ammo}}-->
+                    <!--</td>-->
+                    <!--<td>-->
+                        <!--{{record.mre}}-->
+                    <!--</td>-->
+                    <!--<td>-->
+                        <!--{{record.part}}-->
+                    <!--</td>-->
 
-                </tr>
-                </tbody>
+                <!--</tr>-->
+                <!--</tbody>-->
 
-            </table>
-        </div>
+            <!--</table>-->
+        <!--</div>-->
 
     </div>
 
 </div>
-<div class="content" ng-show="!list">
+<div class="content" ng-show="!list && !showingformular">
     <div class="container">
 
         <h4 class="intro">
-            数据来自<a href="#">GFHelper</a>.
+            数据来自<a href="#">GFDB</a>.
         </h4>
 
         <br>
@@ -273,7 +270,7 @@
         </h4>
 
 
-        <table class="table">
+        <table class="table table-hover">
             <thead>
             <tr>
                 <td>
@@ -306,9 +303,11 @@
 
             <tbody>
 
-            <tr ng-repeat="record in build_info.res">
+            <!--<tr style="cursor: pointer" ng-repeat="record in build_info.res" ng-click="showFormula(record)">-->
+            <tr style="cursor: pointer" ng-repeat="record in build_info.res">
 
-                <td>
+
+            <td>
                     {{$index +1}}
                 </td>
 
@@ -344,12 +343,111 @@
 </div>
 
 
+<div class="content" ng-show="showingformular">
+    <div class="container">
+
+        <h4 class="intro">
+            数据来自<a href="#">GFDB</a>.
+        </h4>
+
+        <br>
+
+        <button type="button" class="btn btn-primary btn-gun" ng-click="backToList()">返回列表</button>
+
+        <h4 ng-show="build_info_loading">
+            Loading...
+        </h4>
+
+        <h4 ng-show="!build_info_loading">
+            {{currentFomular.mp}} {{currentFomular.ammo}} {{currentFomular.mre}} {{currentFomular.part}}的出货统计数据：
+        </h4>
+
+
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <td>
+                    序号
+                </td>
+                <td>
+                    人形
+                </td>
+                <td>
+                    人力
+                </td>
+                <td>
+                    弹药
+                </td>
+                <td>
+                    口粮
+                </td>
+                <td>
+                    零件
+                </td>
+                <td>
+                    出货数
+                </td>
+
+                <td>
+                    总数
+                </td>
+                <td>
+                    出货率
+                </td>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            <tr style="cursor: pointer" ng-repeat="record in formularList">
+
+                <td>
+                    {{$index +1}}
+                </td>
+                <td>
+                    {{record.gunid}}
+                </td>
+                <td>
+                    {{currentFomular.mp}}
+                </td>
+                <td>
+                    {{currentFomular.ammo}}
+                </td>
+                <td>
+                    {{currentFomular.mre}}
+                </td>
+                <td>
+                    {{currentFomular.part}}
+                </td>
+
+                <td>
+                    {{record.count}}
+                </td>
+                <td>
+                    {{record}}
+                </td>
+                <td>
+
+                </td>
+
+            </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+</div>
+
+
+
 
 
 <div class="footer container">
     <hr style="margin-bottom: 10px">
     <div style="font-size:12px;color:#999;float:right">
-        Powerd by GFHelper
+        Powered by GFDB
+        <br>
+        只做了一点微小的工作
     </div>
 </div>
 </body>
@@ -368,6 +466,10 @@
 
         $scope.gun_info = [];
         $scope.list = true;
+        $scope.showingformular = false;
+        $scope.formularList = [];
+
+        $scope.currentFomular = {};
         $scope.currentGun = {}
         $scope.latestBuild = {}
         $scope.showlatest= false;
@@ -385,29 +487,30 @@
         });
 
         get_gun_info.then(function(resp){
-//            console.log(resp.data)
-            $scope.gun_info = resp.data.gun_info;
+            console.log(resp.data)
 
-            for(var doll in $scope.gun_info){
-                console.log(doll)
-                if($scope.gun_info[doll].id){
-                    $scope.doll_list['id_'+$scope.gun_info[doll].id] = $scope.gun_info[doll]
-                }
-            }
+            $scope.gun_info = resp.data;
+//
+//            for(var doll in $scope.gun_info){
+//
+//                if($scope.gun_info[doll].id){
+//                    $scope.doll_list['id_'+$scope.gun_info[doll].id] = $scope.gun_info[doll]
+//                }
+//            }
         })
 
 
-        var latest_build = $http({
-            method:'GET',
-            url:sp_build_info +　'api/log.php'
-        });
-
-        latest_build.then(function(resp){
-//            console.log(resp.data)
-            $scope.latestBuild = resp.data;
-
-            $scope.showlatest = true;
-        })
+//        var latest_build = $http({
+//            method:'GET',
+//            url:sp_build_info +　'api/log.php'
+//        });
+//
+//        latest_build.then(function(resp){
+////            console.log(resp.data)
+//            $scope.latestBuild = resp.data;
+//
+//            $scope.showlatest = true;
+//        })
 
 
         $scope.showSatistic = function(gun){
@@ -422,14 +525,40 @@
             });
 
             build_info.then(function(resp){
+
                 console.log(resp.data)
+
                 $scope.build_info = resp.data;
                 $scope.build_info_loading = false;
             })
 
+        }
 
+        $scope.showFormula = function(record){
+
+            $scope.showingformular = true;
+            $scope.build_info_loading = true;
+            $scope.currentFomular = record;
+
+            console.log(record)
+
+            var data = {mp: record.mp, ammo: record.ammo, mre:record.mre, part: record.part,method:'='}
+
+            var formula = $http({
+                method:'POST',
+                url:sp_build_info +　'api/formula.php?mp=130&ammo=130&mre=130&part=130&method="="',
+                data:{}
+            });
+
+            formula.then(function(resp){
+                console.log(resp.data)
+                $scope.formularList = resp.data;
+                $scope.build_info_loading = false;
+            })
 
         }
+
+
 
     }
     ]).config(function($sceProvider) {
