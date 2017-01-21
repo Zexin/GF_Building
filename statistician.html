@@ -2,11 +2,13 @@
 <html ng-app="app" xmlns:ng="http://angularjs.org" id="ng-app"  >
 <head lang="en">
     <meta charset="UTF-8">
-    <title>IOP制造公司出货统计</title>
+    <title>IOP制造公司出货统计2.0 alpha</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <!--<link rel="stylesheet" href="css/bootstrap-theme.css">-->
     <script src="js/jquery-3.1.0.min.js"></script>
     <script src="js/angular.min.js"></script>
+
+    <link rel="stylesheet" href="css/gun_css.css">
 
 
     <style>
@@ -47,6 +49,17 @@
 
             margin-top:5em;
         }
+
+
+
+        .btn-no-border{
+            border: 0 !important;
+        }
+
+
+
+
+
     </style>
 </head>
 <body ng-controller="list">
@@ -64,7 +77,7 @@
             <a class="navbar-brand" href="#">
                 <img alt="Brand" src="img/iop.jpg">
                 <div>
-                    IOP制造公司出货统计
+                    IOP制造公司出货统计2.0 Alpha
                 </div>
 
             </a>
@@ -112,22 +125,38 @@
 </nav>
 
 
-<div class="content" ng-show="list">
+<div class="content" ng-show="page == 'List'">
+
     <div class="container">
 
-        <h4 class="intro">
-            数据来自<a href="#">GFDB</a>.
-        </h4>
+        <div class="panel panel-default" style="margin-top: 10px;">
+            <div class="panel-heading">通知</div>
+            <div class="panel-body">
+                <p>数据来自<a href="#">{{dataFrom}}</a></p>
 
+                <p>
+                    上次更新：{{last_update  | date : 'yyyy-MM-dd hh:mm:ss '}}
+                </p>
 
-        <br>
-        <br>
+                已有装备建造条目：{{equip_count}}
+                </br>
+                已有人形建造条目：{{gun_count}}
+                </br>
+                </br></br>
+
+    			<u><b>重建&装备建造统计已实装！</b></u>
+                </br></br>
+
+    			如有问题，请发送邮件到gfdb@baka.pw或加QQ讨论群: 456216210 进行反馈。
+            </div>
+        </div>
+
         <div>
             <h4>
                 HG(手枪)
             </h4>
-            <br>
-            <button type="button" class="btn btn-primary btn-gun" ng-click="showSatistic(gun)" ng-repeat="gun in gun_info | filter:{type:1}">
+
+            <button type="button"  ng-class="{2: 'btn-rank-2', 3: 'btn-rank-3', 4: 'btn-rank-4', 5: 'btn-rank-5'}[gun.rank]"  class="btn btn-gun" ng-click="showGunCount(gun)" ng-repeat="gun in gun_info |  orderBy: 'rank' | filter:{type:1}">
                 {{gun.name}}
                 <span class="gun_code">| {{gun.code}}</span>
             </button>
@@ -138,8 +167,8 @@
             <h4>
                 SMG(冲锋枪)
             </h4>
-            <br>
-            <button type="button" class="btn btn-primary btn-gun" ng-click="showSatistic(gun)" ng-repeat="gun in gun_info | filter:{type:2}">
+
+            <button type="button" ng-class="{2: 'btn-rank-2', 3: 'btn-rank-3', 4: 'btn-rank-4', 5: 'btn-rank-5'}[gun.rank]"  class="btn btn-gun"  ng-click="showGunCount(gun)" ng-repeat="gun in gun_info | orderBy: 'rank' |  filter:{type:2}">
                 {{gun.name}}
                 <span class="gun_code">| {{gun.code}}</span>
             </button>
@@ -150,8 +179,8 @@
             <h4>
                 RF(步枪)
             </h4>
-            <br>
-            <button class="btn btn-primary btn-gun" ng-click="showSatistic(gun)" ng-repeat="gun in gun_info | filter:{type:3}">
+
+            <button type="button"  ng-class="{2: 'btn-rank-2', 3: 'btn-rank-3', 4: 'btn-rank-4', 5: 'btn-rank-5'}[gun.rank]"  class="btn btn-gun"  ng-click="showGunCount(gun)" ng-repeat="gun in gun_info | orderBy: 'rank' |  filter:{type:3}">
                 {{gun.name}}
                 <span class="gun_code">| {{gun.code}}</span>
             </button>
@@ -164,7 +193,7 @@
                 AR(突击步枪)
             </h4>
             <br>
-            <button type="button" class="btn btn-primary btn-gun" ng-click="showSatistic(gun)" ng-repeat="gun in gun_info | filter:{type:4}">
+            <button type="button"  ng-class="{2: 'btn-rank-2', 3: 'btn-rank-3', 4: 'btn-rank-4', 5: 'btn-rank-5'}[gun.rank]"  class="btn btn-gun"  ng-click="showGunCount(gun)" ng-repeat="gun in gun_info | orderBy: 'rank' | filter:{type:4}">
                 {{gun.name}}
                 <span class="gun_code">| {{gun.code}}</span>
             </button>
@@ -175,86 +204,141 @@
             <h4>
                 MG(机枪)
             </h4>
-            <br>
-            <button type="button" class="btn btn-primary btn-gun" ng-click="showSatistic(gun)" ng-repeat="gun in gun_info | filter:{type:5}">
+
+            <button type="button"  ng-class="{2: 'btn-rank-2', 3: 'btn-rank-3', 4: 'btn-rank-4', 5: 'btn-rank-5'}[gun.rank]"  class="btn btn-gun" ng-click="showGunCount(gun)" ng-repeat="gun in gun_info | orderBy: 'rank' | filter:{type:5}">
                 {{gun.name}}
                 <span class="gun_code">| {{gun.code}}</span>
             </button>
 
         </div>
 
+        <br>
+        <div>
+            <h4>
+                SG(霰弹枪)
+            </h4>
 
-        <!--<div class="latest_build" ng-show="showlatest" >-->
-            <!--<h4>-->
-                <!--最近出货-->
-            <!--</h4>-->
-            <!--<table class="table">-->
-                <!--<thead>-->
-                <!--<tr>-->
-                    <!--<td>-->
-                        <!--序号-->
-                    <!--</td>-->
-                    <!--<td>-->
-                        <!--人形-->
-                    <!--</td>-->
-
-                    <!--<td>-->
-                        <!--人力-->
-                    <!--</td>-->
-                    <!--<td>-->
-                        <!--弹药-->
-                    <!--</td>-->
-                    <!--<td>-->
-                        <!--口粮-->
-                    <!--</td>-->
-                    <!--<td>-->
-                        <!--零件-->
-                    <!--</td>-->
-
-                <!--</tr>-->
-                <!--</thead>-->
-
-                <!--<tbody>-->
-
-                <!--<tr ng-repeat="record in latestBuild">-->
-
-                    <!--<td>-->
-                        <!--{{$index +1}}-->
-                    <!--</td>-->
-                    <!--<td>-->
-
-                        <!--{{doll_list['id_'+record.gunid].name}}-->
-                    <!--</td>-->
+            <button type="button"  ng-class="{2: 'btn-rank-2', 3: 'btn-rank-3', 4: 'btn-rank-4', 5: 'btn-rank-5'}[gun.rank]"  class="btn btn-gun"  ng-click="showGunCount(gun)" ng-repeat="gun in gun_info | orderBy: 'rank' | filter:{type:6}">
+                {{gun.name}}
+                <span class="gun_code">| {{gun.code}}</span>
+            </button>
+        </div>
 
 
 
-                    <!--<td>-->
-                        <!--{{record.mp}}-->
-                    <!--</td>-->
-                    <!--<td>-->
-                        <!--{{record.ammo}}-->
-                    <!--</td>-->
-                    <!--<td>-->
-                        <!--{{record.mre}}-->
-                    <!--</td>-->
-                    <!--<td>-->
-                        <!--{{record.part}}-->
-                    <!--</td>-->
+        <hr>
 
-                <!--</tr>-->
-                <!--</tbody>-->
 
-            <!--</table>-->
-        <!--</div>-->
+
+        <div>
+            <h4>
+                配件
+            </h4>
+
+            <button type="button"  ng-class="{2: 'btn-equip-rank-2', 3: 'btn-equip-rank-3', 4: 'btn-equip-rank-4', 5: 'btn-equip-rank-5'}[equip.rank]"  class="btn btn-gun"  ng-click="showEquipCount(equip)" ng-repeat="equip in equip_info | remove_equiq_not_used | filter:{category:1} | orderBy: 'rank'">
+                {{equip.name}}
+                <span class="gun_code"></span>
+            </button>
+        </div>
+
+        <br>
+        <div>
+            <h4>
+                弹匣
+            </h4>
+
+            <button type="button"  ng-class="{2: 'btn-equip-rank-2', 3: 'btn-equip-rank-3', 4: 'btn-equip-rank-4', 5: 'btn-equip-rank-5'}[equip.rank]"  class="btn btn-gun"  ng-click="showEquipCount(equip)" ng-repeat="equip in equip_info | remove_equiq_not_used | filter:{category:2} | orderBy: 'rank' ">
+                {{equip.name}}
+                <span class="gun_code"></span>
+            </button>
+        </div>
+
+        <br>
+        <div>
+            <h4>
+                人形
+            </h4>
+
+            <button type="button"  ng-class="{2: 'btn-equip-rank-2', 3: 'btn-equip-rank-3', 4: 'btn-equip-rank-4', 5: 'btn-equip-rank-5'}[equip.rank]"  class="btn btn-gun"  ng-click="showEquipCount(equip)"ng-repeat="equip in equip_info | remove_equiq_not_used | filter:{category:3} | orderBy: 'rank' ">
+                {{equip.name}}
+                <span class="gun_code"></span>
+            </button>
+        </div>
+
+
+
+
+        <div class="latest_build" ng-show="showlatest" >
+            <h4>
+                最近出货
+            </h4>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>
+                        序号
+                    </td>
+                    <td>
+                        人形
+                    </td>
+
+                    <td>
+                        人力
+                    </td>
+                    <td>
+                        弹药
+                    </td>
+                    <td>
+                        口粮
+                    </td>
+                    <td>
+                        零件
+                    </td>
+
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr ng-repeat="record in latestBuild">
+
+                    <td>
+                        {{$index +1}}
+                    </td>
+                    <td>
+
+                        {{doll_list['id_'+record.id].name}}
+                    </td>
+
+
+
+                    <td>
+                        {{record.mp}}
+                    </td>
+                    <td>
+                        {{record.ammo}}
+                    </td>
+                    <td>
+                        {{record.mre}}
+                    </td>
+                    <td>
+                        {{record.part}}
+                    </td>
+
+                </tr>
+                </tbody>
+
+            </table>
+        </div>
 
     </div>
 
 </div>
-<div class="content" ng-show="!list && !showingformular">
+<div class="content" ng-show="page == 'GunCount'">
     <div class="container">
 
         <h4 class="intro">
-            数据来自<a href="#">GFDB</a>.
+            数据来自<a href="#"  >{{dataFrom}}</a>.
         </h4>
 
         <br>
@@ -272,30 +356,38 @@
 
         <table class="table table-hover">
             <thead>
-            <tr>
+            <tr style="cursor: pointer">
                 <td>
                     序号
                 </td>
-                <td>
+                <td ng-click="tabSort('mp')">
                     人力
                 </td>
-                <td>
+                <td ng-click="tabSort('ammo')">
                     弹药
                 </td>
-                <td>
+                <td ng-click="tabSort('mre')">
                     口粮
                 </td>
-                <td>
+                <td ng-click="tabSort('part')">
                     零件
                 </td>
-                <td>
+
+                <td ng-click="tabSort('item1')">
+                    契约
+                </td>
+                <td ng-click="tabSort('core')">
+                    核心
+                </td>
+
+                <td ng-click="tabSort('count')">
                     出货数
                 </td>
 
-                <td>
+                <td ng-click="tabSort('total')">
                     总数
                 </td>
-                <td>
+                <td ng-click="tabSort('rate')">
                     出货率
                 </td>
             </tr>
@@ -303,8 +395,8 @@
 
             <tbody>
 
-            <!--<tr style="cursor: pointer" ng-repeat="record in build_info.res" ng-click="showFormula(record)">-->
-            <tr style="cursor: pointer" ng-repeat="record in build_info.res">
+            <tr style="cursor: pointer" ng-repeat="record in build_info.res | orderBy: sort" ng-click="showFormula(record)">
+            <!--<tr style="cursor: pointer" ng-repeat="record in build_info.res">-->
 
 
             <td>
@@ -325,6 +417,12 @@
                 </td>
 
                 <td>
+                    {{record.item1}}
+                </td>
+                <td>
+                    {{record.core}}
+                </td>
+                <td>
                     {{record.count}}
                 </td>
                 <td>
@@ -343,11 +441,11 @@
 </div>
 
 
-<div class="content" ng-show="showingformular">
+<div class="content" ng-show="page == 'EquipCount'">
     <div class="container">
 
         <h4 class="intro">
-            数据来自<a href="#">GFDB</a>.
+            数据来自<a href="#"  >{{dataFrom}}</a>.
         </h4>
 
         <br>
@@ -359,19 +457,129 @@
         </h4>
 
         <h4 ng-show="!build_info_loading">
-            {{currentFomular.mp}} {{currentFomular.ammo}} {{currentFomular.mre}} {{currentFomular.part}}的出货统计数据：
+            {{currentEquip.name}}的出货统计数据：
         </h4>
 
 
         <table class="table table-hover">
             <thead>
-            <tr>
+            <tr style="cursor: pointer">
                 <td>
                     序号
                 </td>
+                <td ng-click="tabSort('mp')">
+                    人力
+                </td>
+                <td ng-click="tabSort('ammo')">
+                    弹药
+                </td>
+                <td ng-click="tabSort('mre')">
+                    口粮
+                </td>
+                <td ng-click="tabSort('part')">
+                    零件
+                </td>
+
+                <td ng-click="tabSort('count')">
+                    出货数
+                </td>
+
+                <td ng-click="tabSort('total')">
+                    总数
+                </td>
+                <td ng-click="tabSort('rate')">
+                    出货率
+                </td>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            <tr style="cursor: pointer" ng-repeat="record in build_info.res | orderBy: sort" ng-click="showEquipFormula(record)">
+                <!--<tr style="cursor: pointer" ng-repeat="record in build_info.res">-->
+
+
+                <td>
+                    {{$index +1}}
+                </td>
+
+                <td>
+                    {{record.mp}}
+                </td>
+                <td>
+                    {{record.ammo}}
+                </td>
+                <td>
+                    {{record.mre}}
+                </td>
+                <td>
+                    {{record.part}}
+                </td>
+
+
+                <td>
+                    {{record.count}}
+                </td>
+                <td>
+                    {{record.total}}
+                </td>
+                <td>
+                    {{(100 *(record.count/record.total)).toFixed(3)+'%'}}
+                </td>
+
+            </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+</div>
+
+
+
+
+<div class="content" ng-show="page == 'FomularCount'">
+    <div class="container">
+        <h4 class="intro">
+            数据来自<a href="#">{{dataFrom}}</a>.
+        </h4>
+        <br>
+
+        <button type="button" class="btn btn-primary btn-gun" ng-click="backToGunCount()">返回列表</button>
+
+        <h4 ng-show="build_info_loading">
+            Loading...
+        </h4>
+
+        <h4 ng-show="!build_info_loading">
+            {{currentFomular.mp}} {{currentFomular.ammo}} {{currentFomular.mre}} {{currentFomular.part}} 的出货统计数据：
+        </h4>
+
+
+        <p>
+            共查询到{{currentTotal}}条数据.
+        </p>
+
+
+        <table class="table table-hover">
+            <thead>
+            <tr style="cursor: pointer">
+                <td>
+                    序号
+                </td>
+                <td ng-click="tabSort('id')">
+                    人形No.
+                </td>
+
+
+                <td ng-click="tabSort('star')">
+                    星级
+                </td>
+
                 <td>
                     人形
                 </td>
+
                 <td>
                     人力
                 </td>
@@ -384,28 +592,40 @@
                 <td>
                     零件
                 </td>
+
+                <td >
+                    契约
+                </td>
                 <td>
+                    核心
+                </td>
+                <td ng-click="tabSort('count')">
                     出货数
                 </td>
 
-                <td>
-                    总数
-                </td>
-                <td>
+                <td ng-click="tabSort('formularRate')">
                     出货率
                 </td>
+
             </tr>
             </thead>
 
             <tbody>
 
-            <tr style="cursor: pointer" ng-repeat="record in formularList">
+            <tr style="cursor: pointer" ng-repeat="record in formularList | orderBy:sort" ng-click="showGunCount(doll_list['id_'+record.id])">
 
                 <td>
                     {{$index +1}}
                 </td>
-                <td>
-                    {{record.gunid}}
+                <td  >
+                    {{record.id}}
+                </td>
+                <td  ng-class="{2: 'color-rank-2', 3: 'color-rank-3', 4: 'color-rank-4', 5: 'color-rank-5'}[doll_list['id_'+record.id].rank]" >
+                    {{doll_list['id_'+record.id].rank.replace('5','★★★★★').replace('4','★★★★').replace('3','★★★').replace('2','★★')}}
+                </td>
+
+                <td  >
+                    {{doll_list['id_'+record.id].name}}
                 </td>
                 <td>
                     {{currentFomular.mp}}
@@ -419,12 +639,144 @@
                 <td>
                     {{currentFomular.part}}
                 </td>
+                <td >
+                    {{currentFomular.item1}}
+                </td>
+                <td>
+                    {{currentFomular.core}}
+                </td>
 
                 <td>
                     {{record.count}}
                 </td>
                 <td>
-                    {{record}}
+                    {{(100 *(record.count/currentTotal)).toFixed(3)+'%'}}
+                </td>
+                <td>
+
+                </td>
+
+            </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+</div>
+
+<div class="content" ng-show="page == 'EquipFomularCount'">
+    <div class="container">
+        <h4 class="intro">
+            数据来自<a href="#">{{dataFrom}}</a>.
+        </h4>
+        <br>
+
+        <button type="button" class="btn btn-primary btn-gun" ng-click="backToEquipCount()">返回列表</button>
+
+        <h4 ng-show="build_info_loading">
+            Loading...
+        </h4>
+
+        <h4 ng-show="!build_info_loading">
+            {{currentFomular.mp}} {{currentFomular.ammo}} {{currentFomular.mre}} {{currentFomular.part}} 的出货统计数据：
+        </h4>
+
+
+        <p>
+            共查询到{{currentTotal}}条数据.
+        </p>
+
+
+        <table class="table table-hover">
+            <thead>
+            <tr style="cursor: pointer">
+                <td>
+                    序号
+                </td>
+                <td ng-click="tabSort('id')">
+                    装备No.
+                </td>
+
+
+                <td ng-click="tabSort('equipstar')">
+                    星级
+                </td>
+
+                <td>
+                    装备
+                </td>
+
+                <td>
+                    人力
+                </td>
+                <td>
+                    弹药
+                </td>
+                <td>
+                    口粮
+                </td>
+                <td>
+                    零件
+                </td>
+
+                <td >
+                    契约
+                </td>
+                <td>
+                    核心
+                </td>
+                <td ng-click="tabSort('count')">
+                    出货数
+                </td>
+
+                <td ng-click="tabSort('formularRate')">
+                    出货率
+                </td>
+
+            </tr>
+            </thead>
+
+            <tbody>
+
+            <tr style="cursor: pointer" ng-repeat="record in formularList | orderBy:sort" ng-click="showEquipCount(equip_list['id_'+record.id])">
+
+                <td>
+                    {{$index +1}}
+                </td>
+                <td  >
+                    {{record.id}}
+                </td>
+                <td  ng-class="{2: 'color-rank-2', 3: 'color-rank-3', 4: 'color-rank-4', 5: 'color-rank-5'}[equip_list['id_'+record.id].rank]" >
+                    {{equip_list['id_'+record.id].rank.replace('5','★★★★★').replace('4','★★★★').replace('3','★★★').replace('2','★★')}}
+                </td>
+
+                <td  >
+                    {{equip_list['id_'+record.id].name}}
+                </td>
+                <td>
+                    {{currentFomular.mp}}
+                </td>
+                <td>
+                    {{currentFomular.ammo}}
+                </td>
+                <td>
+                    {{currentFomular.mre}}
+                </td>
+                <td>
+                    {{currentFomular.part}}
+                </td>
+                <td >
+                    {{currentFomular.item1}}
+                </td>
+                <td>
+                    {{currentFomular.core}}
+                </td>
+
+                <td>
+                    {{record.count}}
+                </td>
+                <td>
+                    {{(100 *(record.count/currentTotal)).toFixed(3)+'%'}}
                 </td>
                 <td>
 
@@ -441,7 +793,6 @@
 
 
 
-
 <div class="footer container">
     <hr style="margin-bottom: 10px">
     <div style="font-size:12px;color:#999;float:right">
@@ -450,12 +801,14 @@
         只做了一点微小的工作
     </div>
 </div>
+
 </body>
 
 <script>
 
-    var sp_gun_info = 'http://gfdb.baka.pw/res/'
-     sp_gun_info = 'json/'   //local json
+
+    var sp_gun_info = 'json/'   //local json
+
 
     var sp_build_info = 'http://gfdb.baka.pw/'
 
@@ -464,41 +817,211 @@
     ]).controller('list',['$scope','$http','$location',function($scope,$http,$location){
 
 
+        $scope.dataFrom = '长者的教诲';
+
+        $scope.doll_list = {};
+        $scope.equip_list = {};
+
+
+        // page status
+        $scope.page = 'List';   //List, GunCount, FomularCount
+
+
+//        init gun info & List page
+
         $scope.gun_info = [];
-        $scope.list = true;
-        $scope.showingformular = false;
+
+        $scope.get_gun_info = function(){
+            var gun_info = $http({
+                method:'GET',
+                url:sp_gun_info +　'gun_info.json'
+            });
+
+
+            gun_info.then(function(resp){
+                console.log(resp.data)
+
+                if(resp.data.gun_info){
+                    $scope.gun_info = resp.data.gun_info;
+                }else{
+                    $scope.gun_info = resp.data;
+                }
+
+                for(var doll in $scope.gun_info){
+
+                    if($scope.gun_info[doll].id){
+                        $scope.doll_list['id_'+$scope.gun_info[doll].id] = $scope.gun_info[doll]
+                    }
+                }
+            })
+        }
+
+
+
+        $scope.get_gun_info();
+
+        $scope.get_equip_info = function(){
+            var equip_info = $http({
+                method:'GET',
+                url:sp_gun_info +　'equip_info.json'
+            });
+
+
+            equip_info.then(function(resp){
+                console.log(resp.data)
+
+                if(resp.data.equip_info){
+                    $scope.equip_info = resp.data.equip_info;
+                }else{
+                    $scope.equip_info = resp.data;
+                }
+
+
+                for(var equip in $scope.equip_info){
+
+                    if($scope.equip_info[equip].id){
+                        $scope.equip_list['id_'+$scope.equip_info[equip].id] = $scope.equip_info[equip]
+                    }
+                }
+            })
+        }
+        $scope.get_equip_info();
+
+//        Gun count page
+
+        $scope.showGunCount = function(gun){
+
+            $scope.page = 'GunCount';
+
+            $scope.currentGun = gun;
+            $scope.build_info_loading = true;
+
+            var build_info = $http({
+                method:'GET',
+                url:sp_build_info +　'api/result.php?id=' + gun.id
+            });
+
+            build_info.then(function(resp){
+
+                $scope.build_info = resp.data;
+                $scope.build_info_loading = false;
+            })
+        }
+
+        $scope.showEquipCount = function(equip){
+
+            $scope.page = 'EquipCount';
+
+            $scope.currentEquip = equip;
+            $scope.build_info_loading = true;
+
+            var build_info = $http({
+                method:'GET',
+                url:sp_build_info +　'api/result.php?id=' + equip.id + '&equip=1'
+            });
+
+            build_info.then(function(resp){
+
+                $scope.build_info = resp.data;
+                $scope.build_info_loading = false;
+            })
+        }
+
+
+
+
+
+
+
+//        sort hacks
+
+        $scope.SortReverse = '';
+
+
+        $scope.sort = function(item) {
+
+            if( $scope.SortReverse == 'reverse'){
+
+                if($scope.orderProp == 'rate'){
+                    return item.total/item.count;
+                }
+
+                if($scope.orderProp == 'formularRate'){
+                    return item.count/$scope.currentTotal;
+                }
+
+                if($scope.orderProp == 'star'){
+                  if($scope.doll_list['id_'+item.id])
+                    return  $scope.doll_list['id_'+item.id].rank
+                }
+
+                if($scope.orderProp == 'equipstar'){
+                    if($scope.equip_list['id_'+item.id])
+                        return  $scope.equip_list['id_'+item.id].rank
+                }
+
+                return -Math.floor(item[$scope.orderProp]);
+            }else{
+                if($scope.orderProp == 'formularRate'){
+                    return $scope.currentTotal/item.count;
+                }
+                if($scope.orderProp == 'rate'){
+                    return item.count/item.total;
+                }
+
+                if($scope.orderProp == 'star'){
+                    if($scope.doll_list['id_'+item.id])
+                        return  -$scope.doll_list['id_'+item.id].rank
+                }
+
+                if($scope.orderProp == 'equipstar'){
+                    if($scope.equip_list['id_'+item.id])
+                        return  -$scope.equip_list['id_'+item.id].rank
+                }
+
+                return Math.floor(item[$scope.orderProp]);
+            }
+
+        }
+
+        $scope.tabSort = function (sortKey) {
+
+            if( $scope.SortReverse == 'reverse'){
+                $scope.SortReverse = ''
+            }else
+            {
+                $scope.SortReverse = 'reverse'
+            }
+            $scope.orderProp = sortKey;
+        };
+
+        $scope.backToList = function(){
+            $scope.page = 'List';
+            $scope.currentGun = {}
+            $scope.build_info = {}
+        }
+
+        $scope.backToGunCount = function(){
+            $scope.page = 'GunCount';
+
+        }
+        $scope.backToEquipCount = function(){
+            $scope.page = 'EquipCount';
+        }
+
+
         $scope.formularList = [];
 
         $scope.currentFomular = {};
         $scope.currentGun = {}
+
         $scope.latestBuild = {}
-        $scope.showlatest= false;
-        $scope.doll_list = {};
+
         $scope.build_info_loading = true;
 
-        $scope.backToList = function(){
-            $scope.list = true;
-            $scope.currentGun = {}
-            $scope.build_info = {}
-        }
-        var get_gun_info = $http({
-            method:'GET',
-            url:sp_gun_info +　'gun_info.json'
-        });
+//      latest build is off now
 
-        get_gun_info.then(function(resp){
-            console.log(resp.data)
-
-            $scope.gun_info = resp.data;
-//
-//            for(var doll in $scope.gun_info){
-//
-//                if($scope.gun_info[doll].id){
-//                    $scope.doll_list['id_'+$scope.gun_info[doll].id] = $scope.gun_info[doll]
-//                }
-//            }
-        })
-
+        $scope.showlatest= false;
 
 //        var latest_build = $http({
 //            method:'GET',
@@ -513,58 +1036,142 @@
 //        })
 
 
-        $scope.showSatistic = function(gun){
-//            console.log(gun)
-            $scope.list = false;
-            $scope.currentGun = gun;
-            $scope.build_info_loading = true;
-
-            var build_info = $http({
-                method:'GET',
-                url:sp_build_info +　'api/result.php?id=' + gun.id
-            });
-
-            build_info.then(function(resp){
-
-                console.log(resp.data)
-
-                $scope.build_info = resp.data;
-                $scope.build_info_loading = false;
-            })
-
-        }
 
         $scope.showFormula = function(record){
 
-            $scope.showingformular = true;
+            $scope.page = 'FomularCount';
+
             $scope.build_info_loading = true;
+
             $scope.currentFomular = record;
 
             console.log(record)
 
-            var data = {mp: record.mp, ammo: record.ammo, mre:record.mre, part: record.part,method:'='}
+            var data = {mp: record.mp, ammo: record.ammo, mre:record.mre, part: record.part,Limit:150}
 
             var formula = $http({
                 method:'POST',
-                url:sp_build_info +　'api/formula.php?mp=130&ammo=130&mre=130&part=130&method="="',
-                data:{}
+                url:sp_build_info +　'api/formula.php',
+                data:data,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                transformRequest: function(obj) {        
+                    var str = [];        
+                    for(var p in obj){          
+                        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));        
+                    }        
+                    return str.join("&");      
+                }
             });
+
 
             formula.then(function(resp){
                 console.log(resp.data)
                 $scope.formularList = resp.data;
+
+                $scope.currentTotal = 0;
+
+                for(var i in $scope.formularList){
+                    $scope.currentTotal += Math.floor($scope.formularList[i].count);
+                }
                 $scope.build_info_loading = false;
             })
+        }
 
+        $scope.showEquipFormula = function(record){
+
+            $scope.page = 'EquipFomularCount';
+
+            $scope.build_info_loading = true;
+
+            $scope.currentFomular = record;
+
+            console.log(record)
+
+            var data = {mp: record.mp, ammo: record.ammo, mre:record.mre, part: record.part,Limit:150,equip:1}
+
+            var formula = $http({
+                method:'POST',
+                url:sp_build_info +　'api/formula.php',
+                data:data,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                transformRequest: function(obj) {
+                    var str = [];
+                    for(var p in obj){
+                        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                    }
+                    return str.join("&");
+                }
+            });
+
+
+            formula.then(function(resp){
+                console.log(resp.data)
+                $scope.formularList = resp.data;
+
+                $scope.currentTotal = 0;
+
+                for(var i in $scope.formularList){
+                    $scope.currentTotal += Math.floor($scope.formularList[i].count);
+                }
+                $scope.build_info_loading = false;
+            })
         }
 
 
 
+        $scope.last_update = 0;
+        $scope.equip_count = 99999;
+        $scope.gun_count = 99999;
+
+        $scope.getInfo = function(){
+
+            var info = $http({
+                method:'GET',
+                url:sp_build_info +　'api/info.php'
+            });
+
+            info.then(function(resp){
+
+                console.log(resp.data)
+                $scope.last_update = new Date(Math.floor(resp.data.last_update + '000'));
+
+                $scope.equip_count = resp.data.equip_count;
+                $scope.gun_count = resp.data.gun_count;;
+
+            })
+        }
+
+
+        $scope.getInfo();
+
     }
+
+
     ]).config(function($sceProvider) {
         // Completely disable SCE to support IE7.
         $sceProvider.enabled(false);
+    }).filter('remove_equiq_not_used', function () {
+        return function (input) {
+            input = input || '';
+
+            var output = [];
+
+            for (var i = 0; i < input.length; i++) {
+
+                var r = input[i].code.split('_');
+
+                if(r.length > 1){
+                    output.push(input[i])
+                }
+            }
+            return output;
+        };
     });
+
 
 </script>
 </html>
