@@ -340,7 +340,7 @@ fieldset[disabled] .btn-rank-5.active {
 
 .btn-equip-rank-2 {
     color: #fff;
-    background-color: rgba(136, 136, 136,255)
+    background-color: rgba(136, 136, 136,255);
 
 }
 .btn-equip-rank-2:focus,
@@ -613,4 +613,21 @@ fieldset[disabled] .btn-equip-rank-5.active {
 .btn-equip-rank-5 .badge {
     color:rgba(255,216,0,255);
     background-color: #fff;
+}
+
+
+.color-equip-rank-5{
+    color: rgba(255,216,0,255);
+}
+
+.color-equip-rank-4{
+    color: rgba(143,195,31,255);
+}
+
+.color-equip-rank-3{
+    color:rgba(94,180,216,255);
+}
+
+.color-equip-rank-2{
+    color: rgba(136, 136, 136,255);
 }
